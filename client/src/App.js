@@ -19,12 +19,9 @@ function App() {
   useEffect(() => {
     socket.current.on("receive_message", (data) => {
       console.log("message received: ", data);
-      setChat([
-        ...chat,
-        { username: data.username, room: data.room, message: data.message },
-      ]);
+      setChat([...chat, data]);
     });
-  });
+  }, [chat]);
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
@@ -35,8 +32,11 @@ function App() {
 
   const onChatHandler = (e) => {
     e.preventDefault();
-    socket.current.emit("send_message", { username, room, message });
-    setChat([...chat, { username, room, message }]);
+    const data = { username, room, message, date: new Date() };
+
+    console.log("🚀 ~ file: App.js ~ line 37 ~ onChatHandler ~ data", data)
+    socket.current.emit("send_message", data);
+    setChat([...chat, data]);
     setMessage("");
   };
 
@@ -75,21 +75,34 @@ function App() {
                   <div
                     key={Math.random()}
                     className={[
-                      "flex",
+                      "flex flex-col my-2",
                       item.username === username
-                        ? "justify-end"
-                        : "justify-start",
+                        ? "items-end"
+                        : "items-start",
                     ].join(" ")}
                   >
                     <p
                       className={[
-                        "min-w-[150px] p-2 mx-5 my-2 text-white rounded-2xl",
+                        "min-w-[150px] p-2 text-white rounded",
                         item.username === username
-                          ? "bg-green-500"
-                          : "bg-blue-500",
+                          ? "bg-green-500 text-right mr-3"
+                          : "bg-blue-500 ml-3",
                       ].join(" ")}
                     >
                       {item.message}
+                    </p>
+                    <p className={['text-xs',
+                        item.username === username
+                          ? "text-right mr-5"
+                          : "text-left ml-5",
+                      ].join(" ")}>
+                      {new Date(item.date).toLocaleString("en-AU", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })} , {item.username === username ? 'you' : item.username}
                     </p>
                   </div>
                 ))}
@@ -105,7 +118,8 @@ function App() {
               />
               <input
                 type="submit"
-                className="w-1/5 bg-red-500 text-white py-2 rounded cursor-pointer"
+								className="w-1/5 bg-red-500 text-white py-2 rounded cursor-pointer"
+								autoFocus
               />
             </form>
           </div>

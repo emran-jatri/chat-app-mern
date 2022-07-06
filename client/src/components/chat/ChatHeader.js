@@ -1,5 +1,5 @@
 const ChatHeader = (props) => {
-  const { room, username } = props;
+  const { room, username, rooms} = props;
   return (
     <div className="flex justify-between items-center bg-[#F0F2F5] px-5 py-2">
       <div className="flex justify-center items-center space-x-3">
@@ -10,7 +10,7 @@ const ChatHeader = (props) => {
         </div>
         <div>
           <h1>Room Name: {room}</h1>
-          <h1 className="text-[#927781]">Emran Ibn Shayed</h1>
+					<h1 className="text-[#927781]">{Object.keys(rooms).length > 0 && rooms[room].join(', ')}</h1>
         </div>
       </div>
 

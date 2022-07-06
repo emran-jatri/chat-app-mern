@@ -15,20 +15,30 @@ const io = new Server(httpServer, {
 });
 
 let chatData = []
+let roomList = {}
 
 io.on("connection", (socket) => {
 	console.log('socket is connected on server side: ', socket.id);
 
-	socket.emit("receive_message", chatData)
+	// socket.emit("receive_message", chatData)
 
 	socket.on('join_room', (data) => {
-		console.log('room event: ', data);
+		console.log('Joined Member: ', data);
+
+		if (data.room in roomList) {
+			roomList[data.room] = [...new Set([...roomList[data.room], data.username])]
+		}
+		else {
+			roomList[data.room] = [data.username]
+		}
+
 		socket.join(data.room)
+		io.to(data.room).emit("receive_message", chatData, roomList)
 	})
 
 	socket.on('send_message', (data) => {
 		chatData.push(data)
-		socket.to(data.room).emit("receive_message", chatData)
+		socket.to(data.room).emit("receive_message", chatData, roomList)
 	})
 
 

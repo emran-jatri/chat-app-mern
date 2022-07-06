@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import ChatHeader from "./components/chat/ChatHeader";
-import ScrollToBottom from 'react-scroll-to-bottom';
+import ScrollToBottom from "react-scroll-to-bottom";
 
 function App() {
   //implement socket
@@ -11,22 +11,25 @@ function App() {
   const [username, setUsername] = useState("");
   const [room, setRoom] = useState("");
   const [message, setMessage] = useState("");
-  const [chat, setChat] = useState([]);
+	const [chat, setChat] = useState([]);
+	const [rooms, setRooms] = useState({})
   const [login, setLogin] = useState(false);
 
   useEffect(() => {
-    socket.current = io("http://192.168.10.176:3001");
+    socket.current = io("http://localhost:3001");
   }, []);
 
-  useEffect(() => {
-    socket.current.on("receive_message", (data) => {
-      console.log("message received: ", data);
-      setChat(data);
+	useEffect(() => {
+		console.log('--------> receive_message: ',)
+    socket.current.on("receive_message", (chatData, roomList) => {
+      console.log("message received: ", chatData, roomList);
+			setChat(chatData);
+			setRooms(roomList)
     });
-  }, [chat]);
-
+  },[chat]);
+	
   const onSubmitHandler = (e) => {
-    e.preventDefault();
+		e.preventDefault();
     console.log("-------->", username, room);
     socket.current.emit("join_room", { username, room });
     setLogin(true);
@@ -75,7 +78,7 @@ function App() {
         </div>
       ) : (
         <div className="w-3/5 h-4/5 bg-[#EFEAE2] shadow-lg rounded">
-          <ChatHeader room={room} username={username}/>
+						<ChatHeader room={room} username={username} rooms={rooms} />
           <div className="rounded">
             <ScrollToBottom className="h-[658px]">
               {chat.length > 0 &&
@@ -94,10 +97,19 @@ function App() {
                           ? "bg-[#D9FDD3] mr-3 before:bg-[#D9FDD3] before:right-2"
                           : "bg-white ml-3 before:bg-white before:left-2",
                       ].join(" ")}
-										>
-											<p className={"text-blue-500 font-bold"}>{ item.username !== username ? item.username[0].toUpperCase() + item.username.slice(1): ""}</p>
+                    >
+                      <p className={"text-blue-500 font-bold"}>
+                        {item.username !== username
+                          ? item.username[0].toUpperCase() +
+                            item.username.slice(1)
+                          : ""}
+                      </p>
                       <p>{item.message}</p>
-                      <p className={["text-[9px] text-right text-[#927781]"].join(" ")}>
+                      <p
+                        className={[
+                          "text-[9px] text-right text-[#927781]",
+                        ].join(" ")}
+                      >
                         {new Date(item.date)
                           .toLocaleString("en-US", {
                             hour: "2-digit",

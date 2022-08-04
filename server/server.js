@@ -2,10 +2,10 @@ const express = require("express");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
 const cors = require("cors");
+const path = require('path')
 
 const app = express();
 app.use(cors())
-app.use(express.static("../client/build"))
 
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
@@ -47,6 +47,16 @@ io.on("connection", (socket) => {
 		console.log('socket is disconnected, reason: ', reason)
 	});
 });
+
+// console.log('------------------> ', __dirname);
+
+if(process.env.NODE_ENV=='production'){
+
+	app.get('/',(req,res)=>{
+			app.use(express.static("../client/build"))
+			res.sendFile(path.resolve('../client/build/index.html'))
+	})
+}
 
 const port = process.env.PORT || 3000
 httpServer.listen(port, () => {

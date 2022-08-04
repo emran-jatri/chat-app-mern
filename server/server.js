@@ -5,6 +5,7 @@ const cors = require("cors");
 
 const app = express();
 app.use(cors())
+app.use(express.static("../client/build"))
 
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
@@ -47,7 +48,7 @@ io.on("connection", (socket) => {
 	});
 });
 
-const port = 3001
+const port = 3000
 httpServer.listen(port, () => {
 	console.log(`Server is connected to http://localhost:${port}`)
 });

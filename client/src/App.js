@@ -16,7 +16,7 @@ function App() {
   const [login, setLogin] = useState(false);
 
   useEffect(() => {
-    socket.current = io("http://localhost:3001");
+    socket.current = io("http://localhost:3000");
   }, []);
 
 	useEffect(() => {

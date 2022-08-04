@@ -1,0 +1,13 @@
+{
+  "name": "ChatApp",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/emran-jatri/chat-app-mern.git",
+  "author": "ibnshayed <ibnshayed@gmail.com>",
+  "license": "MIT",
+	"scripts": {
+		"start": "cd client && npm run build && cd ../server && npm install && npm run dev",
+		"build": "cd client && npm run build && cd ../server && npm install && npm run dev",
+		"dev": "cd client && npm run build && cd ../server && npm install && npm run dev"
+	}
+}

@@ -6,8 +6,8 @@
   "author": "ibnshayed <ibnshayed@gmail.com>",
   "license": "MIT",
 	"scripts": {
-		"start": "cd client && npm run build && cd ../server && npm install && npm run dev",
-		"build": "cd client && npm run build && cd ../server && npm install && npm run dev",
-		"dev": "cd client && npm run build && cd ../server && npm install && npm run dev"
+		"start": "cd client && npm install && npm run build && cd ../server && npm install && npm run dev",
+		"build": "cd client && npm install && npm run build && cd ../server && npm install && npm run dev",
+		"dev": "cd client && npm install && npm run build && cd ../server && npm install && npm run dev"
 	}
 }
